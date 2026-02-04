@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Produto - GigaProStore</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header>
+      <div class="header-left">
+        <h1 class="logo">GigaProStore</h1>
+        <nav>
+          <a href="index.html">Início</a>
+          <a href="cadastro.html">Cadastrar</a>
+          <a href="produtos.html">Produtos</a>
+        </nav>
+      </div>
+      <button class="theme-toggle">🌙</button>
+    </header>
+
+    <main>
+      <div class="container">
+        <form id="productForm">
+          <h2>Cadastrar Novo Produto</h2>
+
+          <div class="form-group">
+            <label for="name">Nome do Produto*</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Ex: Notebook Dell"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email do Vendedor*</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Ex: vendedor@email.com"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="price">Preço*</label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              placeholder="Ex: 2500.00"
+              step="0.01"
+              min="0"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="category">Categoria*</label>
+            <input
+              type="text"
+              id="category"
+              name="category"
+              placeholder="Ex: Eletrônicos"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Descrição*</label>
+            <textarea
+              id="description"
+              name="description"
+              placeholder="Descreva detalhadamente o produto..."
+              required></textarea>
+          </div>
+
+          <button type="submit">Cadastrar Produto</button>
+        </form>
+      </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+      const form = document.getElementById('productForm')
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        const name = document.getElementById('name').value
+        const email = document.getElementById('email').value
+        const price = parseFloat(document.getElementById('price').value)
+        const category = document.getElementById('category').value
+        const description = document.getElementById('description').value
+
+        try {
+          const response = await fetch('http://localhost:3000/products', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              name,
+              email,
+              price,
+              category,
+              description
+            })
+          })
+
+          if (!response.ok) {
+            throw new Error('Erro ao salvar produto')
+          }
+
+          const data = await response.json()
+          showAlert('Produto cadastrado com sucesso!', 'success')
+          form.reset()
+
+          setTimeout(() => {
+            window.location.href = 'produtos.html'
+          }, 1500)
+        } catch (error) {
+          console.error('Erro:', error)
+          showAlert('Erro ao cadastrar produto. Tente novamente.', 'error')
+        }
+      })
+    </script>
+  </body>
+</html>

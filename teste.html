@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste API GigaProStore</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .test-section { border: 1px solid #ddd; padding: 15px; margin: 10px 0; }
+        button { padding: 10px 20px; background: #6c5ce7; color: white; border: none; cursor: pointer; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste da API GigaProStore</h1>
+
+    <div class="test-section">
+        <h2>GET /products</h2>
+        <button onclick="testarGet()">Testar GET</button>
+        <pre id="getResult"></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>POST /products</h2>
+        <button onclick="testarPost()">Testar POST</button>
+        <pre id="postResult"></pre>
+    </div>
+
+    <script>
+        const API = 'http://localhost:3000'
+
+        async function testarGet() {
+            const resultado = document.getElementById('getResult')
+            resultado.textContent = 'Carregando...'
+
+            try {
+                const response = await fetch(`${API}/products`)
+                const data = await response.json()
+                resultado.textContent = JSON.stringify(data, null, 2)
+            } catch (error) {
+                resultado.textContent = `❌ Erro: ${error.message}`
+            }
+        }
+
+        async function testarPost() {
+            const resultado = document.getElementById('postResult')
+            resultado.textContent = 'Enviando...'
+
+            try {
+                const response = await fetch(`${API}/products`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: 'Produto Teste ' + new Date().getTime(),
+                        email: 'teste@email.com',
+                        price: Math.random() * 5000,
+                        description: 'Descrição de teste',
+                        category: 'Testes'
+                    })
+                })
+
+                const data = await response.json()
+                resultado.textContent = JSON.stringify(data, null, 2)
+            } catch (error) {
+                resultado.textContent = `❌ Erro: ${error.message}`
+            }
+        }
+    </script>
+</body>
+</html>
